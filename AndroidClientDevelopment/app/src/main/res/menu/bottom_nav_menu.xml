@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_dailyq"
         android:title="@string/title_today" />
     <item
-        android:id="profile"
+        android:id="@+id/profile"
         android:icon="@drawable/ic_person"
         android:title="@string/title_profile" />
 </menu>

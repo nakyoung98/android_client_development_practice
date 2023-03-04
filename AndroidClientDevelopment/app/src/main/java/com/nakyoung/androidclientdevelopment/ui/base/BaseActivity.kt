@@ -3,7 +3,7 @@ package com.nakyoung.androidclientdevelopment.ui.base
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 
-class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     /**
      * 옵션 메뉴에서 항목을 선택할 때마다 호출됩니다. 기본 구현은 단순히 false를 반환하여 정상적인 처리가 이루어지도록 합니다

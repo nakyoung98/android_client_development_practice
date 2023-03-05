@@ -39,6 +39,8 @@ class MainActivity : BaseActivity() {
                 MENU.TIME_LINE.id -> fragmentManager.replace(binding.host.id, TimelineFragment())
                 MENU.PROFILE.id -> fragmentManager.replace(binding.host.id, ProfileFragment())
             }
+
+            fragmentManager.commit()
             
             true
         }

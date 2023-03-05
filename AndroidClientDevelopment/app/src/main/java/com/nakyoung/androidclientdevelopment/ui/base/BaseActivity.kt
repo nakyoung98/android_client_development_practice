@@ -7,18 +7,16 @@ import androidx.viewbinding.ViewBinding
 import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
 
 abstract class BaseActivity : AppCompatActivity() {
-    protected lateinit var binding:ViewBinding
+    protected var binding: ViewBinding? = null
 
-    fun assignViewBinding(binding: ViewBinding){
-        this.binding = binding
-    }
+    protected var thisActivityString: String?= null
 
 
     inner class Logger(vararg log: String){ //로그를 출력하는 내부클래스
-        private val title: String = this.javaClass.name
+        private val title: String? = thisActivityString
 
         init{
-            Log.i(title,log.toString())
+            Log.i(title!!, log.joinToString(separator = ",", prefix = "[", postfix = "]"))
         }
     }
 

@@ -4,11 +4,10 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.navigation.NavigationBarView
 import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
 
 abstract class BaseActivity : AppCompatActivity() {
-    protected var binding: ViewBinding? = null
-
     protected var thisActivityString: String?= null
 
 
@@ -20,7 +19,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-
+    protected abstract fun navigationSetting(navigationBarView: NavigationBarView)
 
     /**
      * 옵션 메뉴에서 항목을 선택할 때마다 호출됩니다. 기본 구현은 단순히 false를 반환하여 정상적인 처리가 이루어지도록 합니다
@@ -39,8 +38,5 @@ abstract class BaseActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
-
-
-
 
 }

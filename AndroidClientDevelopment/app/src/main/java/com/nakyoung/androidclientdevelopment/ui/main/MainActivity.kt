@@ -7,7 +7,11 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.navigation.NavigationBarView
 import com.nakyoung.androidclientdevelopment.R
 import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
+import com.nakyoung.androidclientdevelopment.statics.MENU
 import com.nakyoung.androidclientdevelopment.ui.base.BaseActivity
+import com.nakyoung.androidclientdevelopment.ui.profile.ProfileFragment
+import com.nakyoung.androidclientdevelopment.ui.timeline.TimelineFragment
+import com.nakyoung.androidclientdevelopment.ui.today.TodayFragment
 
 class MainActivity : BaseActivity() {
 
@@ -27,5 +31,16 @@ class MainActivity : BaseActivity() {
     }
 
     override fun navigationSetting(navigationBarView: NavigationBarView) {
+        navigationBarView.setOnItemSelectedListener {
+            val fragmentManager = supportFragmentManager.beginTransaction()
+
+            when(it.itemId){
+                MENU.TODAY.id -> fragmentManager.replace(binding.host.id, TodayFragment())
+                MENU.TIME_LINE.id -> fragmentManager.replace(binding.host.id, TimelineFragment())
+                MENU.PROFILE.id -> fragmentManager.replace(binding.host.id, ProfileFragment())
+            }
+            
+            true
+        }
     }
 }

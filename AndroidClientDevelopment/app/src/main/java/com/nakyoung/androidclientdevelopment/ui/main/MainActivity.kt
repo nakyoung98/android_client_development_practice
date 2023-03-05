@@ -41,8 +41,10 @@ class MainActivity : BaseActivity() {
             }
 
             fragmentManager.commit()
-            
+
             true
         }
+
+        navigationBarView.selectedItemId = MENU.TODAY.id
     }
 }

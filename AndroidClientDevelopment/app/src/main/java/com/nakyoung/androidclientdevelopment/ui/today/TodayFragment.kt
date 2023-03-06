@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.nakyoung.androidclientdevelopment.databinding.FragmentTodayBinding
 import com.nakyoung.androidclientdevelopment.ui.base.BaseFragment
+import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -45,6 +46,8 @@ class TodayFragment : BaseFragment(){
             conn.readTimeout = 5000
             conn.requestMethod = "GET"
 
+            //요청에 헤더 추가 (accept헤더)
+            conn.setRequestProperty("Accept","application/json")
             conn.connect()
 
             //해당 api는 get호출 후 단순 문자열을 받아오기 떄문에
@@ -54,10 +57,17 @@ class TodayFragment : BaseFragment(){
             reader.close()
             conn.disconnect()
 
+            //응답으로 받은 body를 JSON으로 넘김
+            //get...(키) 으로 JSON값 가져옴
+            val json= JSONObject(body)
+            val date = json.getString("date")
+            val message = json.getString("message")
+
             //UI작업은 백그라운드에서 할 수 없음
             //이에 따라, runOnUiThread를 이용해 결과를 메인스레드에서 화면에 표시하게 함
             activity?.runOnUiThread {
-                binding!!.questionTextview.text = body
+                binding!!.date.text = date
+                binding!!.questionTextview.text = message
             }
         }.start()
 

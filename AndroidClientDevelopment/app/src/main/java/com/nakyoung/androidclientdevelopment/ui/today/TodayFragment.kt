@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
+import com.nakyoung.androidclientdevelopment.api.response.HelloWorld
 import com.nakyoung.androidclientdevelopment.databinding.FragmentTodayBinding
 import com.nakyoung.androidclientdevelopment.ui.base.BaseFragment
 import org.json.JSONObject
@@ -57,17 +59,20 @@ class TodayFragment : BaseFragment(){
             reader.close()
             conn.disconnect()
 
-            //응답으로 받은 body를 JSON으로 넘김
-            //get...(키) 으로 JSON값 가져옴
-            val json= JSONObject(body)
-            val date = json.getString("date")
-            val message = json.getString("message")
+//            //응답으로 받은 body를 JSON으로 넘김
+//            //get...(키) 으로 JSON값 가져옴
+//            val json= JSONObject(body)
+//            val date = json.getString("date")
+//            val message = json.getString("message")
+
+            val gson = Gson()
+            val helloworld = gson.fromJson(body,HelloWorld::class.java)
 
             //UI작업은 백그라운드에서 할 수 없음
             //이에 따라, runOnUiThread를 이용해 결과를 메인스레드에서 화면에 표시하게 함
             activity?.runOnUiThread {
-                binding!!.date.text = date
-                binding!!.questionTextview.text = message
+                binding!!.date.text = helloworld.date
+                binding!!.questionTextview.text = helloworld.message
             }
         }.start()
 

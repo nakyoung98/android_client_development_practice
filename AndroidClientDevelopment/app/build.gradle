@@ -38,7 +38,7 @@ android {
 dependencies {
 
     //json -> object, object -> json
-    implementation 'com.google.code.gson:gson-2.8.8'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
     implementation 'androidx.core:core-ktx:1.7.0'

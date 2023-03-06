@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.google.gson.Gson
 import com.nakyoung.androidclientdevelopment.api.response.HelloWorld
 import com.nakyoung.androidclientdevelopment.databinding.FragmentTodayBinding
+import com.nakyoung.androidclientdevelopment.domain.FormatDateUseCase
 import com.nakyoung.androidclientdevelopment.ui.base.BaseFragment
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -71,7 +72,7 @@ class TodayFragment : BaseFragment(){
             //UI작업은 백그라운드에서 할 수 없음
             //이에 따라, runOnUiThread를 이용해 결과를 메인스레드에서 화면에 표시하게 함
             activity?.runOnUiThread {
-                binding!!.date.text = helloworld.date
+                binding!!.date.text = FormatDateUseCase().formatter().format(helloworld.date)
                 binding!!.questionTextview.text = helloworld.message
             }
         }.start()

@@ -1,6 +1,5 @@
 package com.nakyoung.androidclientdevelopment.api
 
-import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.api.response.Question
@@ -13,7 +12,7 @@ interface ApiService {
 
     companion object{
 
-        fun create(context: Context): ApiService{
+        fun create(): ApiService{
             //옵션을 지정 후 Gson을 생성하기 위해
             //GsonBuilder 사용으로 옵션 지정 후 create하여 Gson객체를 얻음
             val gson = GsonBuilder()

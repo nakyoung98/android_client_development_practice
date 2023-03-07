@@ -10,6 +10,8 @@ import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
 abstract class BaseActivity : AppCompatActivity() {
     protected var thisActivityString: String?= null
 
+    protected var currentFragment: BaseFragment?= null
+
 
     inner class Logger(vararg log: String){ //로그를 출력하는 내부클래스
         private val title: String? = thisActivityString
@@ -19,7 +21,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected abstract fun navigationSetting(navigationBarView: NavigationBarView)
+    abstract fun navigationSetting(navigationBarView: NavigationBarView)
 
     /**
      * 옵션 메뉴에서 항목을 선택할 때마다 호출됩니다. 기본 구현은 단순히 false를 반환하여 정상적인 처리가 이루어지도록 합니다

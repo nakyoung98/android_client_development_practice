@@ -1,11 +1,13 @@
 package com.nakyoung.androidclientdevelopment.ui.today
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission.Write
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +30,14 @@ class TodayFragment : BaseFragment(){
 
     var question: Question? = null
 
+    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            lifecycleScope.launch{
+                setupAnswer()
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,7 +54,7 @@ class TodayFragment : BaseFragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.writeButton.setOnClickListener{
-            startActivity(Intent(requireContext(), WriteActivity::class.java)
+            startForResult.launch(Intent(requireContext(), WriteActivity::class.java)
                 .apply {
                     putExtra(WriteActivity.EXTRA_QID, question!!.id)
                     //작성 모드 설정
@@ -53,7 +63,7 @@ class TodayFragment : BaseFragment(){
         }
 
         binding.editButton.setOnClickListener{
-            startActivity(Intent(requireContext(), WriteActivity::class.java)
+            startForResult.launch(Intent(requireContext(), WriteActivity::class.java)
                 .apply {
                     putExtra(WriteActivity.EXTRA_QID, question!!.id)
                     putExtra(WriteActivity.EXTRA_MODE, WriteActivity.Mode.EDIT)
@@ -62,6 +72,7 @@ class TodayFragment : BaseFragment(){
 
         binding.deleteButton.setOnClickListener {
             showDeleteConfirmDialog()
+
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -90,20 +101,36 @@ class TodayFragment : BaseFragment(){
         super.onDestroyView()
     }
 
-    fun showDeleteConfirmDialog(){
+    /**
+     * 삭제 버튼을 누를 시 화면에 발생하는 Dialog창
+     * OK: 삭제
+     * NO: 취소
+     * **/
+    private fun showDeleteConfirmDialog(){
         MaterialAlertDialogBuilder(requireContext())
             .setMessage(R.string.dialog_msg_are_you_sure_to_delete)
             .setPositiveButton(R.string.ok){ dialog, which ->
                 lifecycleScope.launch{
                     val deleteResponse = api.deleteAnswer(question!!.id)
                     if (deleteResponse.isSuccessful) {
-                        !binding.answerArea.isVisible
-                        !binding.writeButton.isVisible
+                        binding.answerArea.isVisible = false
+                        binding.writeButton.isVisible = true
                     }
                 }
             }
             .setNegativeButton(R.string.cancel){ dialog, which -> }
                 //dialog구성해서 보이기
             .show()
+    }
+
+    private suspend fun setupAnswer() {
+        val question = question ?: return
+
+        val answer = api.getAnswer(question.id).body()
+
+        binding.answerArea.isVisible = (answer != null)
+        binding.textAnswer.text = answer?.text
+
+        binding.writeButton.isVisible = (answer == null)
     }
 }

@@ -37,50 +37,18 @@ class MainActivity : BaseActivity() {
     }
 
     override fun navigationSetting(navigationBarView: NavigationBarView) {
-        navigationBarView.selectedItemId = MENU.TODAY.id
-        supportFragmentManager.beginTransaction().replace(binding.host.id,TodayFragment())
-        supportFragmentManager.commit(allowStateLoss = false, body = supportFragmentManager.beginTransaction()->)
-
-        navigationBarView.setOnItemSelectedListener { menuItem ->
+        navigationBarView.setOnItemSelectedListener {
             val fragmentManager = supportFragmentManager.beginTransaction()
 
-            when(menuItem.itemId){
-                MENU.TODAY.id ->
-                    {
-                        //let을 사용하여 한번 사용하고 말 확장함수 처리
-                        /**
-                         * todayFragment 변수를 생성하여
-                         * **/
-                        if(currentFragment !is TodayFragment)
-                            fragmentManager.let { it->
-                                val todayFragment = TodayFragment()
-                                currentFragment = todayFragment
-                                it.replace(binding.host.id, todayFragment)
-                            }
-                    }
-                MENU.TIME_LINE.id ->
-                    {
-                        if(currentFragment !is TimelineFragment)
-                            fragmentManager.let { it->
-                                val timelineFragment = TimelineFragment()
-                                currentFragment = timelineFragment
-                                it.replace(binding.host.id, timelineFragment)
-                            }
-                    }
-                MENU.PROFILE.id ->
-                {
-                    if(currentFragment !is ProfileFragment)
-                        fragmentManager.let { it->
-                            val profileFragment = ProfileFragment()
-                            currentFragment = profileFragment
-                            it.replace(binding.host.id, profileFragment)
-                        }
-                }
+            when (it.itemId) {
+                MENU.TODAY.id -> fragmentManager.replace(binding.host.id, TodayFragment())
+                MENU.TIME_LINE.id -> fragmentManager.replace(binding.host.id, TimelineFragment())
+                MENU.PROFILE.id -> fragmentManager.replace(binding.host.id, ProfileFragment())
             }
-
             fragmentManager.commit()
-
             true
         }
+
+        navigationBarView.selectedItemId = MENU.TODAY.id
     }
 }

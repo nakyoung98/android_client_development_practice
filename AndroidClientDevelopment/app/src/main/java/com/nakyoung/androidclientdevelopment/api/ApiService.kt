@@ -133,6 +133,8 @@ interface ApiService {
     @PUT("/v1/questions/{qid}/answers/{uid}")
     suspend fun editAnswer(
         @Path("qid") qid: LocalDate,
+        @Field("text") text: String? = null,
+        @Field("photo") photo: String? = null,
         @Path("uid") uid: String? = "anonymous"
     ): Response<Answer>
 

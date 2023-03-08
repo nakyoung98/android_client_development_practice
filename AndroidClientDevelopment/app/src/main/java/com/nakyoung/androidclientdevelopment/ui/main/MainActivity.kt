@@ -27,7 +27,7 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
     }
 
-    override fun navigationSetting(navigationBarView: NavigationBarView) {
+    private fun navigationSetting(navigationBarView: NavigationBarView) {
         navigationBarView.setOnItemSelectedListener {
             val fragmentManager = supportFragmentManager.beginTransaction()
 

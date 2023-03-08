@@ -21,8 +21,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected abstract fun navigationSetting(navigationBarView: NavigationBarView)
-
     /**
      * 옵션 메뉴에서 항목을 선택할 때마다 호출됩니다. 기본 구현은 단순히 false를 반환하여 정상적인 처리가 이루어지도록 합니다
      * (항목의 Runnable을 호출하거나 적절하게 Handler에 메시지를 보냄).

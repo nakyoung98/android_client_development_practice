@@ -89,6 +89,8 @@ class WriteActivity: BaseActivity() {
                 }
 
             if (answerResponse.isSuccessful){
+                //RESULT_OK: Standard activity result, operation succeeded.
+                setResult(RESULT_OK)
                 finish()
             }else{
                 Toast.makeText(

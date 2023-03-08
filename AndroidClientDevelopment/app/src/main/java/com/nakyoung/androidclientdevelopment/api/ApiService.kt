@@ -13,12 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Path
+import retrofit2.http.*
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter as LocalDateAdapter
@@ -120,14 +115,32 @@ interface ApiService {
     @GET("/v1/questions/{qid}")
     suspend fun getQuestion(@Path("qid") qid: LocalDate): Response<Question>
 
+    @GET("/v1/questions/{qid}/answers/{uid}")
+    suspend fun getAnswer(
+        @Path("qid") qid: LocalDate,
+        @Path("uid") uid: String? = "anonymous"
+    ): Response<Answer>
 
     @FormUrlEncoded
     @POST("/v1/questions/{qid}/answers")
     suspend fun writeAnswer(
-        @Path("qid") qid: String,
-        @Path("text") text: String? = null,
-        @Path("photo") photo: String? = null
+        @Path("qid") qid: LocalDate,
+        @Field("text") text: String? = null,
+        @Field("photo") photo: String? = null
     ): Response<Answer>
+
+    @FormUrlEncoded
+    @PUT("/v1/questions/{qid}/answers/{uid}")
+    suspend fun editAnswer(
+        @Path("qid") qid: LocalDate,
+        @Path("uid") uid: String? = "anonymous"
+    ): Response<Answer>
+
+    @DELETE("/v1/questions/{qid}/answers/{uid}")
+    suspend fun deleteAnswer(
+        @Path("qid") qid: LocalDate,
+        @Path("uid") uid: String? = "anonymous"
+    ): Response<Unit>
 
     /**
      * @Body 사용시

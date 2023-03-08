@@ -1,15 +1,23 @@
 package com.nakyoung.androidclientdevelopment.api
 
 import android.content.Context
+import android.media.Image
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
+import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.Question
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
@@ -110,5 +118,34 @@ interface ApiService {
      * 코루틴에서 사용하기 위해 중단함수로 선언
      * **/
     @GET("/v1/questions/{qid}")
-    suspend fun getQuestion(@Path("qid") qid: LocalDate): Question
+    suspend fun getQuestion(@Path("qid") qid: LocalDate): Response<Question>
+
+
+    @FormUrlEncoded
+    @POST("/v1/questions/{qid}/answers")
+    suspend fun writeAnswer(
+        @Path("qid") qid: String,
+        @Path("text") text: String? = null,
+        @Path("photo") photo: String? = null
+    ): Response<Answer>
+
+    /**
+     * @Body 사용시
+     *
+     * @POST("/v1/questions/{qid}/answers")
+     * suspend fun writeAnswer(
+     *      @Path("qid") qid: String,
+     *      @Body("params"): WriteParams
+     * ): Response<Answer>
+     *
+     * //WriteParams 객체를 만들어 writeAnswer()메서드의 매개변수로 사용
+     * //HTTP메시지에서 Content-Type이 application/json이 되고, WriteParams가 본문의 JSON이 됨
+     * **/
+
+    @Multipart
+    @POST("/images")
+    suspend fun uploadImage(
+        @Part image: MultipartBody.Part
+    ): Response<Image>
+
 }

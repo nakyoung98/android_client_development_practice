@@ -1,13 +1,20 @@
 package com.nakyoung.androidclientdevelopment.ui.today
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresPermission.Write
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.nakyoung.androidclientdevelopment.R
+import com.nakyoung.androidclientdevelopment.api.response.Question
 import com.nakyoung.androidclientdevelopment.databinding.FragmentTodayBinding
 import com.nakyoung.androidclientdevelopment.ui.base.BaseFragment
+import com.nakyoung.androidclientdevelopment.ui.write.WriteActivity
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -16,15 +23,18 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class TodayFragment : BaseFragment(){
-    private var binding: FragmentTodayBinding? = null
+    private var _binding: FragmentTodayBinding? = null
+    val binding get() = _binding!!
+
+    var question: Question? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTodayBinding.inflate(inflater,container,false)
-        return binding!!.root
+        _binding = FragmentTodayBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
 
@@ -33,17 +43,67 @@ class TodayFragment : BaseFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.writeButton.setOnClickListener{
+            startActivity(Intent(requireContext(), WriteActivity::class.java)
+                .apply {
+                    putExtra(WriteActivity.EXTRA_QID, question!!.id)
+                    //작성 모드 설정
+                    putExtra(WriteActivity.EXTRA_MODE, WriteActivity.Mode.WRITE)
+                })
+        }
+
+        binding.editButton.setOnClickListener{
+            startActivity(Intent(requireContext(), WriteActivity::class.java)
+                .apply {
+                    putExtra(WriteActivity.EXTRA_QID, question!!.id)
+                    putExtra(WriteActivity.EXTRA_MODE, WriteActivity.Mode.EDIT)
+                })
+        }
+
+        binding.deleteButton.setOnClickListener {
+            showDeleteConfirmDialog()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
-            val question = api.getQuestion(LocalDate.now())
-            val dateFormatter = DateTimeFormatter.ofPattern("yyyy. M. d")
-            Log.i("TODAY",question.text)
-            binding!!.date.text = dateFormatter.format(question.id)
-            binding!!.questionTextview.text = question.text
+            val questionResponse = api.getQuestion(LocalDate.now())
+            if (questionResponse.isSuccessful){
+                question = questionResponse.body()!!
+
+                val dateFormatter = DateTimeFormatter.ofPattern("yyyy. M. d")
+
+                binding.date.text = dateFormatter.format(question!!.id)
+                binding.questionTextview.text = question!!.text
+
+                val answer = api.getAnswer(question!!.id).body()
+                //answer이 있으면 answer을 visible 하게 해라
+                binding.answerArea.isVisible = (answer != null)
+                binding.textAnswer.text = answer?.text
+                //answer이 없으면 answer을 작성하는 버튼을 띄워라
+                binding.writeButton.isVisible = (answer == null)
+            }
+
         }
     }
 
     override fun onDestroyView() {
-        binding = null
+        _binding = null
         super.onDestroyView()
+    }
+
+    fun showDeleteConfirmDialog(){
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.dialog_msg_are_you_sure_to_delete)
+            .setPositiveButton(R.string.ok){ dialog, which ->
+                lifecycleScope.launch{
+                    val deleteResponse = api.deleteAnswer(question!!.id)
+                    if (deleteResponse.isSuccessful) {
+                        !binding.answerArea.isVisible
+                        !binding.writeButton.isVisible
+                    }
+                }
+            }
+            .setNegativeButton(R.string.cancel){ dialog, which -> }
+                //dialog구성해서 보이기
+            .show()
     }
 }

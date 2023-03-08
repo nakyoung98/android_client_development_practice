@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.Image
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
+import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
 import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.Question
@@ -16,7 +17,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
-import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter as LocalDateAdapter
 
 interface ApiService {
 
@@ -112,17 +112,17 @@ interface ApiService {
      * suspend 제어자
      * 코루틴에서 사용하기 위해 중단함수로 선언
      * **/
-    @GET("/v1/questions/{qid}")
+    @GET("/v2/questions/{qid}")
     suspend fun getQuestion(@Path("qid") qid: LocalDate): Response<Question>
 
-    @GET("/v1/questions/{qid}/answers/{uid}")
+    @GET("/v2/questions/{qid}/answers/{uid}")
     suspend fun getAnswer(
         @Path("qid") qid: LocalDate,
         @Path("uid") uid: String? = "anonymous"
     ): Response<Answer>
 
     @FormUrlEncoded
-    @POST("/v1/questions/{qid}/answers")
+    @POST("/v2/questions/{qid}/answers")
     suspend fun writeAnswer(
         @Path("qid") qid: LocalDate,
         @Field("text") text: String? = null,
@@ -130,7 +130,7 @@ interface ApiService {
     ): Response<Answer>
 
     @FormUrlEncoded
-    @PUT("/v1/questions/{qid}/answers/{uid}")
+    @PUT("/v2/questions/{qid}/answers/{uid}")
     suspend fun editAnswer(
         @Path("qid") qid: LocalDate,
         @Field("text") text: String? = null,
@@ -138,7 +138,7 @@ interface ApiService {
         @Path("uid") uid: String? = "anonymous"
     ): Response<Answer>
 
-    @DELETE("/v1/questions/{qid}/answers/{uid}")
+    @DELETE("/v2/questions/{qid}/answers/{uid}")
     suspend fun deleteAnswer(
         @Path("qid") qid: LocalDate,
         @Path("uid") uid: String? = "anonymous"
@@ -147,7 +147,7 @@ interface ApiService {
     /**
      * @Body 사용시
      *
-     * @POST("/v1/questions/{qid}/answers")
+     * @POST("/v2/questions/{qid}/answers")
      * suspend fun writeAnswer(
      *      @Path("qid") qid: String,
      *      @Body("params"): WriteParams

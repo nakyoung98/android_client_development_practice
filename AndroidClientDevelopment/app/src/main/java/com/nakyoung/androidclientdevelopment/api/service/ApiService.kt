@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
 import com.nakyoung.androidclientdevelopment.api.AuthInterceptor
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
+import com.nakyoung.androidclientdevelopment.api.TokenRefreshAuthentication
 import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.AuthToken
 import com.nakyoung.androidclientdevelopment.api.response.Question
@@ -59,6 +60,7 @@ interface ApiService {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .addInterceptor(AuthInterceptor())
+                .authenticator(TokenRefreshAuthentication())
                 .build()
         }
 
@@ -113,8 +115,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/v2/token")
     fun refreshToken(
-        @Field("username") uid: String,
-        @Field("password") password: String,
+        @Field("refresh_token") refreshToken: String,
         @Field("grant_type") grantType: String = "refresh_token",
     ): Call<AuthToken>
 

@@ -7,6 +7,11 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 
+/**
+ * Performs either preemptive authentication before connecting to a proxy server,
+ * or reactive authentication after receiving a challenge
+ * from either an origin web server or proxy server
+ * **/
 class TokenRefreshAuthentication: Authenticator{
     override fun authenticate(route: Route?, response: Response): Request? {
         // 앱에서 보낸 요청을 확인하여 원래 보낸 요청의 헤더에 Authorization이 있는지 확인

@@ -1,4 +1,4 @@
-package com.nakyoung.androidclientdevelopment.api
+package com.nakyoung.androidclientdevelopment.service
 
 import android.content.Context
 import android.media.Image
@@ -59,7 +59,7 @@ interface ApiService {
                 .build()
         }
 
-        private fun create(context: Context): ApiService{
+        private fun create(context: Context): ApiService {
             //옵션을 지정 후 Gson을 생성하기 위해
             //GsonBuilder 사용으로 옵션 지정 후 create하여 Gson객체를 얻음
             val gson = GsonBuilder()

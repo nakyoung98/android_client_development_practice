@@ -1,10 +1,11 @@
-package com.nakyoung.androidclientdevelopment.service
+package com.nakyoung.androidclientdevelopment.api.service
 
 import android.content.Context
 import android.media.Image
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
+import com.nakyoung.androidclientdevelopment.api.AuthInterceptor
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
 import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.AuthToken
@@ -57,6 +58,7 @@ interface ApiService {
                     //읽기 타임아웃 10초
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(logging)
+                .addInterceptor(AuthInterceptor())
                 .build()
         }
 

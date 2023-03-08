@@ -5,11 +5,14 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
 import com.nakyoung.androidclientdevelopment.api.response.Question
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter as LocalDateAdapter
 
 interface ApiService {
@@ -17,6 +20,39 @@ interface ApiService {
     companion object{
 
         private var INSTANCE: ApiService? = null
+
+        /**
+         * 1. API 요청과 응답에 대한 로그 표시
+         * 2. 타임 아웃 설정
+         * **/
+        private fun okHttpClient(): OkHttpClient{
+            val builder = OkHttpClient.Builder()
+            val logging  = HttpLoggingInterceptor()
+
+            /**
+             * None: no log
+             * Basic: 요청라인과 응답라인만
+             * Headers: 요청라인, 요청헤더, 응답라인, 응답헤더
+             * Body: 요청라인.헤더.본문, 응답라인.헤더.본문
+             *
+             * [Log에서]
+             * --> : 요청
+             * <-- : 응답
+             *
+             * => logging이 남기는 log는 OkHttpClient로 로그캣에서 필터링하여 볼 수 있음
+             * **/
+            logging.level = HttpLoggingInterceptor.Level.BODY
+
+            return builder
+                    //연결 타임아웃 3초
+                .connectTimeout(3, TimeUnit.SECONDS)
+                    //쓰기 타임아웃 10초
+                .writeTimeout(10, TimeUnit.SECONDS)
+                    //읽기 타임아웃 10초
+                .readTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(logging)
+                .build()
+        }
 
         private fun create(context: Context): ApiService{
             //옵션을 지정 후 Gson을 생성하기 위해
@@ -34,6 +70,8 @@ interface ApiService {
                 .addConverterFactory(LocalDateConverterFactory())
                     //retrofit 객체에 api interface를 넘기면 HTTP메서드 어노테이션(@GET같은)에 있는 경로가 baseUrl과 결합해 URI 결정
                 .baseUrl("http://10.0.2.2:5000")
+                    //로그 연결
+                .client(okHttpClient())
                 .build()
                 .create(ApiService::class.java)
         }

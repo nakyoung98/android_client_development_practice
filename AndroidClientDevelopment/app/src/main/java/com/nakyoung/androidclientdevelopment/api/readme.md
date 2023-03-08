@@ -8,7 +8,7 @@
 참고: ApiService.kt -> suspend fun getQuestion
 ```
 
-# @Header(""")
+# @Header("")
 ## 특징
 요청에 헤더를 추가할 수 있음
 ## 한계
@@ -16,7 +16,7 @@
 ## 해결
 OkHTTP에서 지원하는 인터셉터 활용 (앱-OkHTTP: 애플리케이션 인터셉터)(OkHttp-네트워크: 네트워크 인터셉터)
 
-# Interceptop
+# Interceptor
 ## 특징
 모든 요청과 응답의 사이에서 이들을 모니터링하거나 변경 또는 재시도할 수 있음
 ## 활용
@@ -58,3 +58,9 @@ HTTP는 GET을 사용하는 것을 알리고 API의 경로를 지정함
 3. @Multipart: 파일을 보내거나 여러 타입의 데이터를 하나의 요청으로 보내기 위해 사용
 4. @Part: MultipartBody.Part 타입의 매개변수에 사용하여 각 파트를 정의
 5. @Body: JSON으로 요청을 보낼 때 주로 사용. 요청에 전달할 매개변수를 객체로 만들고 매서드의 매개변수로 전달함. 이 매개변수에 @Body 어노테이션을 붙이면 컨버터가 객체를 Serialize 하여 요청의 본문으로 사용함
+
+# @Tag
+## 특징
+메서드의 매개변수에서 사용
+## 활용
+Interceptor나 Authenticator 등에 의해 필요없는 api가 의도하지 않은 인터셉트가 생기는 것을 방지하기 위해 활용

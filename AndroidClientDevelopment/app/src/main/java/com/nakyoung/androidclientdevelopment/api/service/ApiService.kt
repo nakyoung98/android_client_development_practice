@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
 import com.nakyoung.androidclientdevelopment.api.AuthInterceptor
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
-import com.nakyoung.androidclientdevelopment.api.TokenRefreshAuthentication
+import com.nakyoung.androidclientdevelopment.api.TokenRefreshAuthenticator
 import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.AuthToken
 import com.nakyoung.androidclientdevelopment.api.response.Question
@@ -61,7 +61,7 @@ interface ApiService {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .addInterceptor(AuthInterceptor())
-                .authenticator(TokenRefreshAuthentication())
+                .authenticator(TokenRefreshAuthenticator())
                 .build()
         }
 

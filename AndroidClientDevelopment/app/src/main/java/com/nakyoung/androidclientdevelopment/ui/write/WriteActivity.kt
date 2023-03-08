@@ -3,6 +3,9 @@ package com.nakyoung.androidclientdevelopment.ui.write
 import android.media.MediaCodec.MetricsConstants.MODE
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.nakyoung.androidclientdevelopment.R
 import com.nakyoung.androidclientdevelopment.api.response.Answer
@@ -51,9 +54,49 @@ class WriteActivity: BaseActivity() {
 
         lifecycleScope.launch{
             question = qid?.let { api.getQuestion(it).body() }!!
-            answer = api.get
+            answer = api.getAnswer(qid).body()
 
+            binding.question.text = question.text
+            //editTextView에서는 text를 그냥 설정할 수 없음. setText 사용
+            binding.answer.setText(answer?.text)
         }
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.write_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.done -> {
+                write()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun write(){
+        val text = binding.answer.text.toString().trimEnd()
+
+        lifecycleScope.launch{
+            val answerResponse =
+                if (answer == null){
+                    api.writeAnswer(question.id, text)
+                }else{
+                    api.editAnswer(question.id, text)
+                }
+
+            if (answerResponse.isSuccessful){
+                finish()
+            }else{
+                Toast.makeText(
+                    this@WriteActivity,
+                    answerResponse.message(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 }

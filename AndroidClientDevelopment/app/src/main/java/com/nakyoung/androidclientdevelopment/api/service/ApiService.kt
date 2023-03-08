@@ -12,6 +12,7 @@ import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.AuthToken
 import com.nakyoung.androidclientdevelopment.api.response.Question
 import com.nakyoung.androidclientdevelopment.manager.AuthManager
+import com.nakyoung.androidclientdevelopment.statics.AuthType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -110,6 +111,7 @@ interface ApiService {
         @Field("username") uid: String,
         @Field("password") password: String,
         @Field("grant_type") grantType: String = "password",
+        @Tag authType: AuthType = AuthType.NO_AUTH
     ): Response<AuthToken>
 
     @FormUrlEncoded
@@ -117,6 +119,7 @@ interface ApiService {
     fun refreshToken(
         @Field("refresh_token") refreshToken: String,
         @Field("grant_type") grantType: String = "refresh_token",
+        @Tag authType: AuthType = AuthType.NO_AUTH
     ): Call<AuthToken>
 
 

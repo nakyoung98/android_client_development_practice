@@ -26,6 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+<!--        windoswSoftInputMode에 adjustResize를 할당 시 소프트 키보드가 표시되었을 때 레이아웃 크기 조절-->
+        <activity android:name=".ui.write.WriteActivity"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
     </application>
 
 </manifest>

@@ -6,7 +6,10 @@ import java.util.*
 import java.util.logging.SimpleFormatter
 
 class FormatDateUseCase {
-    fun formatter(): SimpleDateFormat {
-    return SimpleDateFormat("yy.MM.dd hh:mm:ss", Locale.KOREA)
+    /**
+     * format 패턴 정의
+     * **/
+    fun formatter(formatPattern: String): SimpleDateFormat {
+    return SimpleDateFormat(formatPattern, Locale.KOREA)
     }
 }

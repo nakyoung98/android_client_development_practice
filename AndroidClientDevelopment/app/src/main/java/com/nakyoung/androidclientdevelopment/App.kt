@@ -2,7 +2,7 @@ package com.nakyoung.androidclientdevelopment
 
 import android.app.Application
 import com.nakyoung.androidclientdevelopment.manager.AuthManager
-import com.nakyoung.androidclientdevelopment.service.ApiService
+import com.nakyoung.androidclientdevelopment.api.service.ApiService
 
 /**
  * 싱글톤으로 생성되어야할 것들은

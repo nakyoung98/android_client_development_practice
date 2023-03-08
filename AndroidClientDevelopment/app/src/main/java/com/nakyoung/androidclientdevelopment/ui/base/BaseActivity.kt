@@ -3,7 +3,7 @@ package com.nakyoung.androidclientdevelopment.ui.base
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.nakyoung.androidclientdevelopment.service.ApiService
+import com.nakyoung.androidclientdevelopment.api.service.ApiService
 
 abstract class BaseActivity : AppCompatActivity() {
     protected var thisActivityString: String?= null

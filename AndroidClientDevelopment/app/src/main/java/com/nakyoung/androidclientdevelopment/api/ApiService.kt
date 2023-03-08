@@ -7,10 +7,12 @@ import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
 import com.nakyoung.androidclientdevelopment.api.response.Answer
+import com.nakyoung.androidclientdevelopment.api.response.AuthToken
 import com.nakyoung.androidclientdevelopment.api.response.Question
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -90,6 +92,29 @@ interface ApiService {
 
         fun getInstance(): ApiService = INSTANCE!!
     }
+
+
+
+    /**
+     * 인증정보 요청
+     * **/
+    //Login (id/password)
+    @FormUrlEncoded
+    @POST("/v2/token")
+    suspend fun login(
+        @Field("username") uid: String,
+        @Field("password") password: String,
+        @Field("grant_type") grantType: String = "password",
+    ): Response<AuthToken>
+
+    @FormUrlEncoded
+    @POST("/v2/token")
+    fun refreshToken(
+        @Field("username") uid: String,
+        @Field("password") password: String,
+        @Field("grant_type") grantType: String = "refresh_token",
+    ): Call<AuthToken>
+
 
     /**
      * @GET 어노테이션

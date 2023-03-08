@@ -18,18 +18,26 @@
         android:theme="@style/Theme.AndroidClientDevelopment"
         tools:targetApi="31">
 
-        <activity android:name=".ui.login.LoginActivity"
-            android:exported="true">
+<!--        시작 로고화면-->
+        <activity android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.nakyoung.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+<!--        로그인-->
+        <activity android:name=".ui.login.LoginActivity">
+        </activity>
+
+<!--        메인-->
         <activity
             android:name=".ui.main.MainActivity">
         </activity>
 
+<!--        답변 작성-->
 <!--        windoswSoftInputMode에 adjustResize를 할당 시 소프트 키보드가 표시되었을 때 레이아웃 크기 조절-->
         <activity android:name=".ui.write.WriteActivity"
             android:windowSoftInputMode="adjustResize">

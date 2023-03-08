@@ -9,6 +9,7 @@ import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConve
 import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.AuthToken
 import com.nakyoung.androidclientdevelopment.api.response.Question
+import com.nakyoung.androidclientdevelopment.manager.AuthManager
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -143,7 +144,7 @@ interface ApiService {
     @GET("/v2/questions/{qid}/answers/{uid}")
     suspend fun getAnswer(
         @Path("qid") qid: LocalDate,
-        @Path("uid") uid: String? = "anonymous"
+        @Path("uid") uid: String? = AuthManager.uid
     ): Response<Answer>
 
     @FormUrlEncoded
@@ -160,13 +161,13 @@ interface ApiService {
         @Path("qid") qid: LocalDate,
         @Field("text") text: String? = null,
         @Field("photo") photo: String? = null,
-        @Path("uid") uid: String? = "anonymous"
+        @Path("uid") uid: String? = AuthManager.uid
     ): Response<Answer>
 
     @DELETE("/v2/questions/{qid}/answers/{uid}")
     suspend fun deleteAnswer(
         @Path("qid") qid: LocalDate,
-        @Path("uid") uid: String? = "anonymous"
+        @Path("uid") uid: String? = AuthManager.uid
     ): Response<Unit>
 
     /**

@@ -6,19 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
-import com.nakyoung.androidclientdevelopment.api.ApiService
-import com.nakyoung.androidclientdevelopment.api.response.HelloWorld
 import com.nakyoung.androidclientdevelopment.databinding.FragmentTodayBinding
-import com.nakyoung.androidclientdevelopment.domain.FormatDateUseCase
-import com.nakyoung.androidclientdevelopment.ui.base.BaseActivity
 import com.nakyoung.androidclientdevelopment.ui.base.BaseFragment
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class TodayFragment : BaseFragment(){
@@ -28,7 +22,7 @@ class TodayFragment : BaseFragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTodayBinding.inflate(inflater,container,false)
         return binding!!.root
     }
@@ -40,19 +34,12 @@ class TodayFragment : BaseFragment(){
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-
-            val api = ApiService.create(requireContext())
-
-            val qidDateFormat = FormatDateUseCase().formatter()
-            val qid = qidDateFormat.format(Date())
-            val question = api.getQuestion(qid)
-
+            val question = api.getQuestion(LocalDate.now())
+            val dateFormatter = DateTimeFormatter.ofPattern("yyyy. M. d")
             Log.i("TODAY",question.text)
-            binding?.date?.text = qidDateFormat.format(question.id)
-            binding?.questionTextview?.text = question.text
-
+            binding!!.date.text = dateFormatter.format(question.id)
+            binding!!.questionTextview.text = question.text
         }
-
     }
 
     override fun onDestroyView() {

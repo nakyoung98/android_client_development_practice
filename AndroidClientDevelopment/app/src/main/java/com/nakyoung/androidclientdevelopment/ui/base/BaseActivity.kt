@@ -5,11 +5,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.navigation.NavigationBarView
+import com.nakyoung.androidclientdevelopment.api.ApiService
 import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
 
 abstract class BaseActivity : AppCompatActivity() {
     protected var thisActivityString: String?= null
 
+    val api: ApiService by lazy { ApiService.getInstance() }
 
     inner class Logger(vararg log: String){ //로그를 출력하는 내부클래스
         private val title: String? = thisActivityString

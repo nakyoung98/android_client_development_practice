@@ -1,22 +1,13 @@
 package com.nakyoung.androidclientdevelopment.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
-import androidx.fragment.app.commit
-import androidx.lifecycle.lifecycleScope
-import androidx.viewbinding.ViewBinding
 import com.google.android.material.navigation.NavigationBarView
-import com.nakyoung.androidclientdevelopment.R
 import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
 import com.nakyoung.androidclientdevelopment.statics.MENU
 import com.nakyoung.androidclientdevelopment.ui.base.BaseActivity
 import com.nakyoung.androidclientdevelopment.ui.profile.ProfileFragment
 import com.nakyoung.androidclientdevelopment.ui.timeline.TimelineFragment
 import com.nakyoung.androidclientdevelopment.ui.today.TodayFragment
-import com.nakyoung.androidclientdevelopment.ui.today.TodayViewModel
-import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -33,7 +24,7 @@ class MainActivity : BaseActivity() {
         navigationSetting(binding.navView)
         Logger("생성완료 ")
 
-        setContentView(binding!!.root)
+        setContentView(binding.root)
     }
 
     override fun navigationSetting(navigationBarView: NavigationBarView) {

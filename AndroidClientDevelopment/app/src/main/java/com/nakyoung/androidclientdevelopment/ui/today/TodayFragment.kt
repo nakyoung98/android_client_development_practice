@@ -72,7 +72,6 @@ class TodayFragment : BaseFragment(){
 
         binding.deleteButton.setOnClickListener {
             showDeleteConfirmDialog()
-
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -85,12 +84,7 @@ class TodayFragment : BaseFragment(){
                 binding.date.text = dateFormatter.format(question!!.id)
                 binding.questionTextview.text = question!!.text
 
-                val answer = api.getAnswer(question!!.id).body()
-                //answer이 있으면 answer을 visible 하게 해라
-                binding.answerArea.isVisible = (answer != null)
-                binding.textAnswer.text = answer?.text
-                //answer이 없으면 answer을 작성하는 버튼을 띄워라
-                binding.writeButton.isVisible = (answer == null)
+                setupAnswer()
             }
 
         }

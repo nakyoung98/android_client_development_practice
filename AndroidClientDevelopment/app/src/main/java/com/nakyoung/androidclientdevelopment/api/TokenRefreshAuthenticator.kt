@@ -18,7 +18,7 @@ class TokenRefreshAuthenticator: Authenticator{
     override fun authenticate(route: Route?, response: Response): Request? {
         // 앱에서 보낸 요청을 확인하여 원래 보낸 요청의 헤더에 Authorization이 있는지 확인
         val accessToken = response.request.header(HEADERS.AUTHORIZATION)
-            ?.split("")
+            ?.split(" ")
             ?.getOrNull(1)
         // 없으면 Token 관련한 요청이 아니므로 null 반환
         accessToken ?: return null

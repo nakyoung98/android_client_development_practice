@@ -13,4 +13,7 @@
     <dimen name="thumbnail_size">56dp</dimen>
 <!--    나누는 라인 두께 -->
     <dimen name="divider">1dp</dimen>
+
+<!--    모서리 둥근 정도 -->
+    <dimen name="thumbnail_rounded_corner">4dp</dimen>
 </resources>

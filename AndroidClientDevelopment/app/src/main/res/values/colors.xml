@@ -10,4 +10,7 @@
 
 <!--    오늘의 질문 배경 색-->
     <color name="under_card">#f5f5f5</color>
+
+<!--    photoview appbar, 50% 투명 검정정 -->
+    <color name="transparent_bar">#80000000</color>
 </resources>

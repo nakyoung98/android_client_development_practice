@@ -1,7 +1,6 @@
 package com.nakyoung.androidclientdevelopment.api.service
 
 import android.content.Context
-import android.media.Image
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
@@ -10,6 +9,7 @@ import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConve
 import com.nakyoung.androidclientdevelopment.api.TokenRefreshAuthenticator
 import com.nakyoung.androidclientdevelopment.api.response.Answer
 import com.nakyoung.androidclientdevelopment.api.response.AuthToken
+import com.nakyoung.androidclientdevelopment.api.response.Image
 import com.nakyoung.androidclientdevelopment.api.response.Question
 import com.nakyoung.androidclientdevelopment.manager.AuthManager
 import com.nakyoung.androidclientdevelopment.statics.AuthType
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 
 interface ApiService {
 
-    companion object{
+    companion object {
 
         private var INSTANCE: ApiService? = null
 
@@ -34,9 +34,9 @@ interface ApiService {
          * 1. API 요청과 응답에 대한 로그 표시
          * 2. 타임 아웃 설정
          * **/
-        private fun okHttpClient(): OkHttpClient{
+        private fun okHttpClient(): OkHttpClient {
             val builder = OkHttpClient.Builder()
-            val logging  = HttpLoggingInterceptor()
+            val logging = HttpLoggingInterceptor()
 
             /**
              * None: no log
@@ -53,11 +53,11 @@ interface ApiService {
             logging.level = HttpLoggingInterceptor.Level.BODY
 
             return builder
-                    //연결 타임아웃 3초
+                //연결 타임아웃 3초
                 .connectTimeout(3, TimeUnit.SECONDS)
-                    //쓰기 타임아웃 10초
+                //쓰기 타임아웃 10초
                 .writeTimeout(10, TimeUnit.SECONDS)
-                    //읽기 타임아웃 10초
+                //읽기 타임아웃 10초
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(logging)
                 .addInterceptor(AuthInterceptor())
@@ -69,19 +69,19 @@ interface ApiService {
             //옵션을 지정 후 Gson을 생성하기 위해
             //GsonBuilder 사용으로 옵션 지정 후 create하여 Gson객체를 얻음
             val gson = GsonBuilder()
-                    //서버는 필드 이름에 snakeCase를 사용하고있으므로 이를 정해주면 Gson이 자동 변환함
+                //서버는 필드 이름에 snakeCase를 사용하고있으므로 이를 정해주면 Gson이 자동 변환함
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter)
                 .create()
 
             return Retrofit.Builder()
-                    //Retrofit이 Gson을 사용해 메서드읭 매개변수를 HTTP 요청 본문으로 변환하거나 HTTP응답 본문을 메서드의 반환 모델로 변환
-                    //생성한객체를 전달해 ConverterFactory를 만든 후 Builder의 addConverterFactory로 전달
+                //Retrofit이 Gson을 사용해 메서드읭 매개변수를 HTTP 요청 본문으로 변환하거나 HTTP응답 본문을 메서드의 반환 모델로 변환
+                //생성한객체를 전달해 ConverterFactory를 만든 후 Builder의 addConverterFactory로 전달
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addConverterFactory(LocalDateConverterFactory())
-                    //retrofit 객체에 api interface를 넘기면 HTTP메서드 어노테이션(@GET같은)에 있는 경로가 baseUrl과 결합해 URI 결정
+                //retrofit 객체에 api interface를 넘기면 HTTP메서드 어노테이션(@GET같은)에 있는 경로가 baseUrl과 결합해 URI 결정
                 .baseUrl("http://10.0.2.2:5000")
-                    //로그 연결
+                //로그 연결
                 .client(okHttpClient())
                 .build()
                 .create(ApiService::class.java)
@@ -98,7 +98,6 @@ interface ApiService {
 
         fun getInstance(): ApiService = INSTANCE!!
     }
-
 
 
     /**
@@ -147,6 +146,12 @@ interface ApiService {
     @GET("/v2/questions/{qid}")
     suspend fun getQuestion(@Path("qid") qid: LocalDate): Response<Question>
 
+    @GET("/v2/questions")
+    suspend fun getQuestions(
+        @Query("from_date") fromDate: LocalDate,
+        @Query("page_size") pageSize: Int
+    ): Response<List<Question>>
+
     @GET("/v2/questions/{qid}/answers/{uid}")
     suspend fun getAnswer(
         @Path("qid") qid: LocalDate,
@@ -190,7 +195,7 @@ interface ApiService {
      * **/
 
     @Multipart
-    @POST("/images")
+    @POST("/v2/images")
     suspend fun uploadImage(
         @Part image: MultipartBody.Part
     ): Response<Image>

@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission.Write
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.nakyoung.androidclientdevelopment.R
 import com.nakyoung.androidclientdevelopment.api.response.Question
@@ -126,5 +127,18 @@ class TodayFragment : BaseFragment(){
         binding.textAnswer.text = answer?.text
 
         binding.writeButton.isVisible = (answer == null)
+
+        binding.photoAnswer.isVisible = !answer?.photo.isNullOrEmpty()
+        answer?.photo?.let {
+            binding.photoAnswer.load(it){
+                placeholder(R.drawable.ph_image)
+            }
+            binding.photoAnswer.setOnClickListener{
+                startActivity(Intent(requireContext(),
+                    ImageViewerActivity::class.java).apply {
+                        putExtra(ImageViewerActivity.EXTRA_URL, answer.photo)
+                    })
+            }
+        }
     }
 }

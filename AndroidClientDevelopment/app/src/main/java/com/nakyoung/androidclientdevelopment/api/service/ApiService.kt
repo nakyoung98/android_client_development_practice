@@ -4,15 +4,14 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.nakyoung.androidclientdevelopment.adapter.LocalDateAdapter
-import com.nakyoung.androidclientdevelopment.api.AuthInterceptor
+import com.nakyoung.androidclientdevelopment.api.interceptor.AuthInterceptor
 import com.nakyoung.androidclientdevelopment.api.ConverterFactory.LocalDateConverterFactory
 import com.nakyoung.androidclientdevelopment.api.TokenRefreshAuthenticator
-import com.nakyoung.androidclientdevelopment.api.response.Answer
-import com.nakyoung.androidclientdevelopment.api.response.AuthToken
-import com.nakyoung.androidclientdevelopment.api.response.Image
-import com.nakyoung.androidclientdevelopment.api.response.Question
+import com.nakyoung.androidclientdevelopment.api.interceptor.EndpointLoggingInterceptor
+import com.nakyoung.androidclientdevelopment.api.response.*
 import com.nakyoung.androidclientdevelopment.manager.AuthManager
 import com.nakyoung.androidclientdevelopment.statics.AuthType
+import okhttp3.Cache
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,7 +33,7 @@ interface ApiService {
          * 1. API 요청과 응답에 대한 로그 표시
          * 2. 타임 아웃 설정
          * **/
-        private fun okHttpClient(): OkHttpClient {
+        private fun okHttpClient(context: Context): OkHttpClient {
             val builder = OkHttpClient.Builder()
             val logging = HttpLoggingInterceptor()
 
@@ -52,15 +51,22 @@ interface ApiService {
              * **/
             logging.level = HttpLoggingInterceptor.Level.BODY
 
+            //cache 설정
+            val cacheSize = 5 * 1024 * 1024L //5MB
+            val cache = Cache(context.cacheDir,cacheSize) //캐시 저장 위치와 캐시 사이즈를 넘겨 캐시 객체 생성
+
             return builder
                 //연결 타임아웃 3초
                 .connectTimeout(3, TimeUnit.SECONDS)
                 //쓰기 타임아웃 10초
-                .writeTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
                 //읽기 타임아웃 10초
-                .readTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .cache(cache)
                 .addInterceptor(logging)
                 .addInterceptor(AuthInterceptor())
+                .addInterceptor(EndpointLoggingInterceptor("AppInterceptor","answers"))
+                .addNetworkInterceptor(EndpointLoggingInterceptor("NetworkInterceptor", "answers"))
                 .authenticator(TokenRefreshAuthenticator())
                 .build()
         }
@@ -81,8 +87,8 @@ interface ApiService {
                 .addConverterFactory(LocalDateConverterFactory())
                 //retrofit 객체에 api interface를 넘기면 HTTP메서드 어노테이션(@GET같은)에 있는 경로가 baseUrl과 결합해 URI 결정
                 .baseUrl("http://10.0.2.2:5000")
-                //로그 연결
-                .client(okHttpClient())
+                //로그 및 캐시, 각종 인터셉터 연결
+                .client(okHttpClient(context))
                 .build()
                 .create(ApiService::class.java)
         }
@@ -122,6 +128,29 @@ interface ApiService {
     ): Call<AuthToken>
 
 
+    /** 팔로잉 관련 **/
+    @GET("/v2/users/{uid}")
+    suspend fun getUser(
+        @Path("uid") uid: String
+    ): Response<User>
+
+    @POST("/v2/user/following/{uid}")
+    suspend fun follow(
+        @Path("uid") uid: String
+    ): Response<Unit>
+
+    @DELETE("/v2/user/following/{uid}")
+    suspend fun unfollow(
+        @Path("uid") uid: String
+    ): Response<Unit>
+
+    @GET("/v2/users/{uid}/answers")
+    suspend fun getUserAnswers(
+        @Path("uid") uid: String,
+        @Query("from_date") fromDate: LocalDate?= null
+    ): Response<List<QuestionAndAnswer>>
+
+
     /**
      * @GET 어노테이션
      * HTTP는 GET을 사용하는 것을 알리고 API의 경로를 지정함
@@ -157,6 +186,11 @@ interface ApiService {
         @Path("qid") qid: LocalDate,
         @Path("uid") uid: String? = AuthManager.uid
     ): Response<Answer>
+
+    @GET("/v2/questions/{qid}/answers")
+    suspend fun getAnswers(
+        @Path("qid") qid: LocalDate
+    ): Response<List<Answer>>
 
     @FormUrlEncoded
     @POST("/v2/questions/{qid}/answers")

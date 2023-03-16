@@ -11,9 +11,15 @@
     <dimen name="qa_height">160dp</dimen>
 <!--    썸네일 사이즈 -->
     <dimen name="thumbnail_size">56dp</dimen>
-<!--    나누는 라인 두께 -->
+<!--    프로필 사이즈-->
+    <dimen name="user_photo_normal">48dp</dimen>
+    <dimen name="user_photo_large">96dp</dimen>
+
+    <!--    나누는 라인 두께 -->
     <dimen name="divider">1dp</dimen>
 
 <!--    모서리 둥근 정도 -->
     <dimen name="thumbnail_rounded_corner">4dp</dimen>
+
+    <dimen name="count_cell_width">104dp</dimen>
 </resources>

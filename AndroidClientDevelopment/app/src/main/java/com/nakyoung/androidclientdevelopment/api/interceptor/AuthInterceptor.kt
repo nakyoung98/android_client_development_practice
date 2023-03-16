@@ -1,4 +1,4 @@
-package com.nakyoung.androidclientdevelopment.api
+package com.nakyoung.androidclientdevelopment.api.interceptor
 
 import com.nakyoung.androidclientdevelopment.manager.AuthManager
 import com.nakyoung.androidclientdevelopment.statics.AuthType

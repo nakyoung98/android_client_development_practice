@@ -1,9 +1,11 @@
 package com.nakyoung.androidclientdevelopment.ui.timeline
 
+import android.content.Intent
 import androidx.recyclerview.widget.RecyclerView
 import com.nakyoung.androidclientdevelopment.R
 import com.nakyoung.androidclientdevelopment.api.response.Question
 import com.nakyoung.androidclientdevelopment.databinding.ItemTimelineCardBinding
+import com.nakyoung.androidclientdevelopment.ui.timeline.detail.DetailActivity
 import java.time.format.DateTimeFormatter
 
 class TimelineCardviewHolder(val binding: ItemTimelineCardBinding)
@@ -24,7 +26,14 @@ class TimelineCardviewHolder(val binding: ItemTimelineCardBinding)
             }
 
         binding.card.setOnClickListener{
-            TODO("상세 화면으로 이동")
+            val context = binding.root.context
+
+            context.startActivity(
+                Intent(
+                context,DetailActivity::class.java
+            ).apply{
+                putExtra(DetailActivity.EXTRA_QID, question.id)
+                })
         }
     }
 }

@@ -13,4 +13,8 @@
 
 <!--    photoview appbar, 50% 투명 검정정 -->
     <color name="transparent_bar">#80000000</color>
+
+<!--    팔로우 관련 -->
+    <color name="follow_button">#004ecb</color>
+    <color name="unfollow_button">#f44336</color>
 </resources>

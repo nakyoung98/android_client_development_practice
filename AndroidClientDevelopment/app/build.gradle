@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -66,4 +67,13 @@ dependencies {
     //페이징3를 위한 의존성
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
+
+    //좌우 스와이프 UI 뷰페이저2 를 위한 의존성
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    //room의존성
+    implementation 'androidx.room:room-runtime:2.4.3'
+    implementation 'androidx.room:room-ktx:2.4.3'
+    implementation 'androidx.room:room-paging:2.4.3'
+    kapt 'androidx.room:room-compiler:2.4.3'
 }

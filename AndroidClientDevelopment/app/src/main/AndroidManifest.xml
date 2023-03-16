@@ -39,6 +39,11 @@
         <activity
             android:name=".ui.write.WriteActivity"
             android:windowSoftInputMode="adjustResize"></activity>
+
+        <activity
+            android:name=".ui.timeline.detail.DetailActivity"></activity>
+
+        <activity android:name=".ui.profile.ProfileActivity"></activity>
     </application>
 
 </manifest>

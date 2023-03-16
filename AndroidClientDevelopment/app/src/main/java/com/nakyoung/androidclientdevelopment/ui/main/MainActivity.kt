@@ -3,6 +3,7 @@ package com.nakyoung.androidclientdevelopment.ui.main
 import android.os.Bundle
 import com.google.android.material.navigation.NavigationBarView
 import com.nakyoung.androidclientdevelopment.databinding.ActivityMainBinding
+import com.nakyoung.androidclientdevelopment.manager.AuthManager
 import com.nakyoung.androidclientdevelopment.statics.MENU
 import com.nakyoung.androidclientdevelopment.ui.base.BaseActivity
 import com.nakyoung.androidclientdevelopment.ui.profile.ProfileFragment
@@ -34,7 +35,12 @@ class MainActivity : BaseActivity() {
             when (it.itemId) {
                 MENU.TODAY.id -> fragmentManager.replace(binding.host.id, TodayFragment())
                 MENU.TIME_LINE.id -> fragmentManager.replace(binding.host.id, TimelineFragment())
-                MENU.PROFILE.id -> fragmentManager.replace(binding.host.id, ProfileFragment())
+                MENU.PROFILE.id -> {
+                    fragmentManager.replace(binding.host.id, ProfileFragment().apply {
+                        arguments = Bundle().apply {
+                            putString(ProfileFragment.ARG_UID,AuthManager.uid)
+                        }
+                    })}
             }
             fragmentManager.commit()
             true
